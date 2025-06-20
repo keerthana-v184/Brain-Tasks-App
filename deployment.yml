@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: brain-tasks-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: brain-tasks
+  template:
+    metadata:
+      labels:
+        app: brain-tasks
+    spec:
+      containers:
+      - name: brain-tasks-container
+        image: 536697223131.dkr.ecr.us-east-1.amazonaws.com/brain-tasks-app:v1
+        ports:
+        - containerPort: 80

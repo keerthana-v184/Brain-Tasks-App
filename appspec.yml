@@ -1,0 +1,10 @@
+version: 0.0
+Resources:
+  - Kubernetes:
+      Manifest:
+        - deployment.yml
+        - service.yml
+      LoadBalancerInfo:
+        ContainerName: brain-tasks-container
+        ContainerPort: 80
+RoleArn: arn:aws:iam::536697223131:role/Codedeploy-EKS-Role

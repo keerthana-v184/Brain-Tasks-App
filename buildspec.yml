@@ -1,0 +1,30 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 536697223131.dkr.ecr.us-east-1.amazonaws.com
+      - REPOSITORY_URL=536697223131.dkr.ecr.us-east-1.amazonaws.com/Brain-tasks-app
+      - IMAGE_TAG=v1.0
+
+  build:
+    commands:
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URL:$IMAGE_TAG .
+
+  post_build:
+    commands:
+      - echo Pushing the Docker image...
+      - docker push $REPOSITORY_URL:$IMAGE_TAG
+      - echo Deploying to EKS...
+      - aws eks update-kubeconfig --region us-east-1 --name brain-tasks-cluster
+      - kubectl apply -f deployment.yml
+      - kubectl apply -f service.yml
+
+artifacts:
+  files:
+    - appspec.yml
+    - deployment.yml
+    - service.yml
