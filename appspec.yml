@@ -8,3 +8,10 @@ Resources:
         ContainerName: brain-tasks-container
         ContainerPort: 80
 RoleArn: arn:aws:iam::536697223131:role/Codedeploy-EKS-Role
+
+hooks:
+  AfterAllowTestTraffic:
+    - location: scripts/deploy.sh
+      timeout: 300
+      runas: root
+
