@@ -17,3 +17,27 @@ spec:
         image: 536697223131.dkr.ecr.us-east-1.amazonaws.com/brain-tasks-app:v1
         ports:
         - containerPort: 80
+        volumeMounts:
+        - name: nginx-logs
+          mountPath: /var/log/nginx
+
+      - name: cloudwatch-agent
+        image: amazon/cloudwatch-agent:latest
+        volumeMounts:
+        - name: nginx-logs
+          mountPath: /var/log/nginx
+        - name: cwagent-config
+          mountPath: /etc/cwagentconfig
+          readOnly: true
+        args:
+        - -config
+        - /etc/cwagentconfig/cwagentconfig.json
+        - -envconfig
+
+      volumes:
+      - name: nginx-logs
+        emptyDir: {}
+      - name: cwagent-config
+        configMap:
+          name: cwagentconfig
+
